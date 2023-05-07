@@ -20,18 +20,21 @@ while True:
         message = connectionSocket.recv(1024).decode()   
         filename = message.split(' ')[1]    
         f = open(filename[1:])                     
-        outputdata = f.read()          
+        outputdata = f.read()        
+          
         #Send one HTTP header line into socket 
         response = 'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n'
         connectionSocket.send(response.encode())
    
         #Send the content of the requested file to the client 
         connectionSocket.send(outputdata.encode())
+
+        #Close client socket
         connectionSocket.close() 
     except IOError: 
         #Send response message for file not found 
-     
-        connectionSocket.send('HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n\r\n<h1>404 Not Found</h1>'.encode())
+        response = 'HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n\r\n<h1>404 Not Found</h1>'
+        connectionSocket.send(response.encode())
 
         #Close client socket 
         connectionSocket.close()
